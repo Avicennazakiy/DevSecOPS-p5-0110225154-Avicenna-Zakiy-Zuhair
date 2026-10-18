@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Mini LMS{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <nav>
+    <a class="brand" href="{{ url_for('tasks.index') }}">Mini LMS</a>
+    <div>
+      {% if g.user %}
+        <span>{{ g.user['username'] }} ({{ g.user['role'] }})</span>
+        {% if g.user['role'] == 'pengajar' %}
+          <a href="{{ url_for('tasks.students') }}">Data siswa</a>
+        {% endif %}
+        <form method="post" action="{{ url_for('auth.logout') }}" class="inline">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="link">Keluar</button>
+        </form>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}">Masuk</a>
+        <a href="{{ url_for('auth.register') }}">Daftar</a>
+      {% endif %}
+    </div>
+  </nav>
+  <main>
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+      <div class="flash {{ category }}">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

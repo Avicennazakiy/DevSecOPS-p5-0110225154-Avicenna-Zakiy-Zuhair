@@ -1,0 +1,32 @@
+name: SAST
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  sonarqube:
+    name: SonarQube SAST
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v7
+        env:
+          SONAR_TOKEN: ${{ secrets.sqp_11d68ecd942f2dd1f00234ff83696a4b8be6bac3 }}
+
+      - name: Quality Gate
+        uses: SonarSource/sonarqube-quality-gate-action@master
+        timeout-minutes: 10
+        env:
+          SONAR_TOKEN: ${{ secrets.sqp_11d68ecd942f2dd1f00234ff83696a4b8be6bac3 }}
