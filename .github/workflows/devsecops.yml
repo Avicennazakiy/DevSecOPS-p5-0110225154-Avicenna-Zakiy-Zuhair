@@ -11,13 +11,22 @@ permissions:
 jobs:
   sonarqube:
     name: SonarQube SAST and Quality Gate
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Check SonarQube URL
+        run: |
+          echo "SONAR_HOST_URL is configured:"
+          if [ -n "${{ vars.SONAR_HOST_URL }}" ]; then
+            echo "YES"
+          else
+            echo "NO"
+          fi
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v7
