@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Daftar Tugas - Mini LMS{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Daftar Tugas</h1>
+  {% if g.user['role'] == 'pengajar' %}
+    <a class="button" href="{{ url_for('tasks.new_task') }}">+ Tambah tugas</a>
+  {% endif %}
+</div>
+
+{% if not tasks %}
+  <p class="muted">Belum ada tugas.</p>
+{% endif %}
+
+{% for task in tasks %}
+<article class="card">
+  <h2>{{ task['title'] }}</h2>
+  <p class="meta">Oleh {{ task['teacher'] }} &middot; {{ task['created_at'] }}</p>
+  <p class="instructions">{{ task['instructions'] }}</p>
+
+  {% if g.user['role'] == 'siswa' %}
+    {% if task['done'] %}
+      <span class="badge ok">Sudah selesai</span>
+    {% else %}
+      <form method="post" action="{{ url_for('tasks.accept_task', task_id=task['id']) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit">Tandai selesai</button>
+      </form>
+    {% endif %}
+  {% else %}
+    <p class="meta">Selesai: {{ task['done_count'] }} dari {{ total_students }} siswa</p>
+    {% if task['created_by'] == g.user['id'] %}
+      <form method="post" action="{{ url_for('tasks.delete_task', task_id=task['id']) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="danger">Hapus</button>
+      </form>
+    {% endif %}
+  {% endif %}
+</article>
+{% endfor %}
+{% endblock %}
