@@ -1,21 +1,20 @@
-name: SAST
+name: DevSecOps - SonarQube
 
 on:
   push:
     branches:
       - main
 
-  pull_request:
-    branches:
-      - main
+permissions:
+  contents: read
 
 jobs:
   sonarqube:
-    name: SonarQube SAST
+    name: SonarQube SAST and Quality Gate
     runs-on: self-hosted
 
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -23,11 +22,12 @@ jobs:
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v7
         env:
-          SONAR_TOKEN: ${{ secrets.sqp_11d68ecd942f2dd1f00234ff83696a4b8be6bac3 }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
 
       - name: Quality Gate
-        uses: SonarSource/sonarqube-quality-gate-action@master
+        uses: SonarSource/sonarqube-quality-gate-action@v1.2.0
         timeout-minutes: 10
         env:
-          SONAR_HOST_URL: http://192.168.110.201:9000
-          SONAR_TOKEN: ${{ secrets.sqp_11d68ecd942f2dd1f00234ff83696a4b8be6bac3 }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
