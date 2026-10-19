@@ -5,12 +5,39 @@ on:
     branches:
       - main
 
+  pull_request:
+    branches:
+      - main
+
 permissions:
   contents: read
 
 jobs:
-  sonarqube:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Unit Test
+        run: |
+          python -m unittest discover -s tests -t . -v
+
+  sast-scan:
     name: SonarQube SAST and Quality Gate
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
