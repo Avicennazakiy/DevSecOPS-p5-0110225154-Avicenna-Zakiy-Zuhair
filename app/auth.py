@@ -89,6 +89,7 @@ def register():
         password = request.form.get("password", "")
         role = request.form.get("role", "")
         teacher_code = request.form.get("teacher_code", "")
+        print("ROLE DITERIMA:", role)
 
         error = validate_registration(username, password, role, teacher_code)
         if error is None:

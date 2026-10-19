@@ -14,11 +14,10 @@ def csrf_token():
 
 
 def protect_csrf():
-    if not current_app.config["CSRF_ENABLED"]:
-        return
     if request.method in UNSAFE_METHODS:
         sent = request.form.get("csrf_token", "")
         expected = session.get("csrf_token", "")
+
         if not expected or not hmac.compare_digest(sent, expected):
             abort(400, description="Token CSRF tidak valid.")
 

@@ -1,4 +1,3 @@
-"""Mini LMS: aplikasi web sederhana untuk pengajar dan siswa."""
 import os
 
 from flask import Flask

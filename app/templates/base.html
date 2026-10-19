@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Mini LMS{% endblock %}</title>
+  <title>{% block title %}Tugasku{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <nav>
-    <a class="brand" href="{{ url_for('tasks.index') }}">Mini LMS</a>
+    <a class="brand" href="{{ url_for('tasks.index') }}">Tugasku</a>
     <div>
       {% if g.user %}
         <span>{{ g.user['username'] }} ({{ g.user['role'] }})</span>
