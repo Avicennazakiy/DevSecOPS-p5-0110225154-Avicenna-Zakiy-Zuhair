@@ -1,3 +1,4 @@
+
 name: DevSecOps - SonarQube
 
 on:
@@ -5,21 +6,19 @@ on:
     branches:
       - main
 
-  pull_request:
-    branches:
-      - main
-
 permissions:
   contents: read
 
 jobs:
-  build:
-    name: Build and Test
+  sonarqube:
+    name: Test, SAST and Quality Gate
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -34,26 +33,7 @@ jobs:
       - name: Run Tests with Coverage
         run: |
           pytest --cov=app --cov-report=xml:coverage.xml --cov-report=term-missing
-
-  sast-scan:
-    name: SonarQube SAST and Quality Gate
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Check SonarQube URL
-        run: |
-          echo "SONAR_HOST_URL is configured:"
-          if [ -n "${{ vars.SONAR_HOST_URL }}" ]; then
-            echo "YES"
-          else
-            echo "NO"
-          fi
+          test -s coverage.xml
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v7
@@ -61,7 +41,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
 
-      - name: Quality Gate
+      - name: SonarQube Quality Gate
         uses: SonarSource/sonarqube-quality-gate-action@v1.2.0
         timeout-minutes: 10
         env:
