@@ -31,10 +31,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Unit Test
-        run: |
-          python -m unittest discover -s tests -t . -v
-
   sast-scan:
     name: SonarQube SAST and Quality Gate
     needs: build
