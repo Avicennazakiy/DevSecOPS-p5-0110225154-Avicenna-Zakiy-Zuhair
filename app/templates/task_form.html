@@ -5,7 +5,7 @@
 <form method="post" class="stack">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <label for="title">Judul</label>
-  <input id="title" name="title" required maxlength="100" autofocus>
+  <input id="title" name="title" required maxlength="100">
   <label for="instructions">Instruksi</label>
   <textarea id="instructions" name="instructions" rows="6" required maxlength="2000"></textarea>
   <button type="submit">Simpan tugas</button>
